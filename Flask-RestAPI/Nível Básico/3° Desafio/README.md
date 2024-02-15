@@ -1,0 +1,1 @@
+Crie uma rota que aceite solicitações POST e retorne os dados enviados como resposta.
