@@ -3,10 +3,8 @@ from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
-Base = declarative_base()
 engine = create_engine('sqlite:///blog.db')
-Session = sessionmaker(bind=engine)
-session = Session()
+Base = declarative_base()
 
 
 class User(Base):
@@ -30,7 +28,7 @@ class User(Base):
             "email": self.email,
             "posts": [post.as_dict() for post in self.posts]
         }
-    
+
 
 class Posting(Base):
     __tablename__ = "posting"
@@ -61,3 +59,5 @@ class Posting(Base):
 
 Base.metadata.create_all(engine)
 
+Session = sessionmaker(bind=engine)
+session = Session()

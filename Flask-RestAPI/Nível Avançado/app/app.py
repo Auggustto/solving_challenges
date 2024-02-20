@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 
-from controllers.user_controller import User_Controller
+from controllers.user_controllers.user_controller import User_Controller
 
 
 app = Flask(__name__)
@@ -16,6 +16,8 @@ class User(Resource):
         birthdata = request.json.get("birthdata")
         email = request.json.get("email")
         password = request.json.get("password")
+
+        print(name, lastname, birthdata, email, password)
 
         create_user = User_Controller.create(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
 
