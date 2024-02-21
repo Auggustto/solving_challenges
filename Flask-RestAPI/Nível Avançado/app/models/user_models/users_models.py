@@ -38,8 +38,13 @@ class User_Methods:
         
         
 
-    def read():
-        pass
+    def read(email):
+        try:
+            read_user = User_Methods.filter_users(email)
+            return read_user.as_dict()
+        
+        except Exception as e:
+            return e, 500
 
 
     def update():

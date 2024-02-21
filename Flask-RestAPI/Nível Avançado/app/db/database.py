@@ -1,6 +1,7 @@
 from sqlalchemy import Integer, String, create_engine, Column, Date, ForeignKey, Time
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import date
 
 
 engine = create_engine('sqlite:///blog.db')
@@ -24,7 +25,7 @@ class User(Base):
             "id": self.id,
             "name": self.name,
             "lastname": self.lastname,
-            "birthdata": self.birthdata,
+            "birthdata": self.birthdata.strftime("%d/%m/%Y"),
             "email": self.email,
             "posts": [post.as_dict() for post in self.posts]
         }
