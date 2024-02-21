@@ -12,9 +12,6 @@ from models.hash_models.hash_model import HashModels
 class User_Methods:
 
     def filter_users(email):
-        # validation_user_email =  session.query(User).filter_by(email=email).first()
-        # print(validation_user_email)
-
         return session.query(User).filter_by(email=email).first()
 
 
@@ -37,7 +34,6 @@ class User_Methods:
             return {"error": str(e)}, 500
         
         
-
     def read(email):
         try:
             read_user = User_Methods.filter_users(email)
@@ -47,9 +43,24 @@ class User_Methods:
             return e, 500
 
 
-    def update():
-        pass
+    def update(name, lastname, birthdata, email):
+        try:
+            select_user = User_Methods.filter_users(email)
 
+            if select_user:
+                select_user.name = name
+                select_user.lastname = lastname
+                select_user.birthdata = birthdata
+
+                session.commit()
+                
+                return {"message": "User update sucessfully!"}, 200
+            
+            return {"error": f"User: {email} not found!"}, 500
+            
+        except Exception as e:
+            session.rollback()
+            return {"error": str(e)}, 500
 
     def delete():
         pass
