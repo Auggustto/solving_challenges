@@ -10,7 +10,7 @@ from db.database import session, User
 from models.hash_models.hash_model import HashModels
 
 class User_Methods:
-
+    
     def filter_users(email):
         return session.query(User).filter_by(email=email).first()
 
@@ -62,5 +62,31 @@ class User_Methods:
             session.rollback()
             return {"error": str(e)}, 500
 
-    def delete():
-        pass
+
+    def delete(email):
+        try:
+            select_user = User_Methods.filter_users(email)
+
+            if select_user:
+                session.delete(select_user)
+                session.commit()
+
+                return {"status": f"User {email} deleted successfully!"}, 200
+            
+        except Exception as e:
+            session.rollback()
+            return {"error": str(e)}, 500
+        
+
+    def read_all_users():
+        try:
+            select_all = session.query(User).all()
+
+            if select_all:
+                return [user.as_dict() for user in select_all]
+            
+            return {"error": "Users not found!"}, 404
+        
+        except Exception as e:
+            session.rollback()
+            return {"error": str(e)}, 500

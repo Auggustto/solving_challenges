@@ -35,16 +35,22 @@ class User(Resource):
         return update_user
     
 
+    def delete(self):
+        email = request.json.get("email")
+        delete_user = User_Controller.delete_user(email)
 
+        return delete_user
 
 
 
 class CreateUser(Resource):
+
+    def get(self):
+        return User_Controller.all_users()
+
     def post(self):
         name, lastname, birthdata, email, password = User.get_metadata()
-        create_user = User_Controller.create_users(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
-
-        return create_user
+        return User_Controller.create_users(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
 
 
 
