@@ -1,23 +1,42 @@
-"""
-    1° CRUD de postagens
-    2° incluindo a capacidade de filtrar por diferentes critérios, como data de publicação, autor, categoria, etc.
-    3° Login
-        - hashing de senhas
-    4° autenticação
+# CRUD operations for managing user data, including creation, reading, updating, and deletion.
+# Also includes additional functionalities like filtering users based on different criteria.
+# Provides user authentication with password hashing.
+# Author: [Your Name]
 
-"""
 from db.database import session, User
 from models.hash_models.hash_model import HashModels
+import logging
 
-class User_Methods:
-    
-    def filter_users(email):
+class UserManager:
+    def filter_user(email):
+        """
+        Filters a user by email.
+
+        Args:
+            email (str): Email of the user to filter.
+
+        Returns:
+            User or None: User object found or None if not found.
+        """
         return session.query(User).filter_by(email=email).first()
 
 
-    def create(name, lastname, birthdata, email, password):
+    def create_user(name, lastname, birthdata, email, password):
+        """
+        Creates a new user.
+
+        Args:
+            name (str): User's first name.
+            lastname (str): User's last name.
+            birthdata (str): User's birthdate.
+            email (str): User's email.
+            password (str): User's password.
+
+        Returns:
+            dict: Message indicating success or error.
+        """
         try:
-            existing_user = User_Methods.filter_users(email=email)
+            existing_user = UserManager.filter_user(email=email)
 
             if existing_user:
                 return {"message": f"Email {email} is already in use!"}, 500
@@ -26,26 +45,47 @@ class User_Methods:
             session.add(new_user)
             session.commit()
 
-            return {"message": "User created sucessfully!"}, 201
+            return {"message": "User created successfully!"}, 201
             
         except Exception as e:
             session.rollback()
-            print("Error occurred during user creation:", e)
+            logging.error(f"Error creating user: {e}")
             return {"error": str(e)}, 500
         
         
-    def read(email):
+    def read_user(email):
+        """
+        Reads user data based on email.
+
+        Args:
+            email (str): Email of the user to read.
+
+        Returns:
+            dict: User data in dictionary format.
+        """
         try:
-            read_user = User_Methods.filter_users(email)
+            read_user = UserManager.filter_user(email)
             return read_user.as_dict()
         
         except Exception as e:
             return e, 500
 
 
-    def update(name, lastname, birthdata, email):
+    def update_user(name, lastname, birthdata, email):
+        """
+        Updates user data.
+
+        Args:
+            name (str): Updated first name.
+            lastname (str): Updated last name.
+            birthdata (str): Updated birthdate.
+            email (str): Email of the user to update.
+
+        Returns:
+            dict: Message indicating success or error.
+        """
         try:
-            select_user = User_Methods.filter_users(email)
+            select_user = UserManager.filter_user(email)
 
             if select_user:
                 select_user.name = name
@@ -54,7 +94,7 @@ class User_Methods:
 
                 session.commit()
                 
-                return {"message": "User update sucessfully!"}, 200
+                return {"message": "User updated successfully!"}, 200
             
             return {"error": f"User: {email} not found!"}, 500
             
@@ -63,9 +103,18 @@ class User_Methods:
             return {"error": str(e)}, 500
 
 
-    def delete(email):
+    def delete_user(email):
+        """
+        Deletes a user.
+
+        Args:
+            email (str): Email of the user to delete.
+
+        Returns:
+            dict: Message indicating success or error.
+        """
         try:
-            select_user = User_Methods.filter_users(email)
+            select_user = UserManager.filter_user(email)
 
             if select_user:
                 session.delete(select_user)
@@ -73,12 +122,20 @@ class User_Methods:
 
                 return {"status": f"User {email} deleted successfully!"}, 200
             
+            return {"message": f"User: {email} not found!"}, 404
+            
         except Exception as e:
             session.rollback()
             return {"error": str(e)}, 500
         
 
     def read_all_users():
+        """
+        Reads all users.
+
+        Returns:
+            dict: List of user data or error message.
+        """
         try:
             select_all = session.query(User).all()
 

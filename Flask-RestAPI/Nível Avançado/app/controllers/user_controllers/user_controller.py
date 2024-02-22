@@ -1,32 +1,32 @@
-from models.user_models.users_models import User_Methods
+from models.user_models.users_models import UserManager
 from dateutil import parser
 
-class User_Controller:
+class UserController:
 
-    def Format_Birthdata(birthdata):
+    def format_birthdata(birthdata):
         return parser.parse(birthdata, dayfirst=True).date()
 
     
     def create_users(name, lastname, birthdata, email, password):
-        object_data = User_Controller.Format_Birthdata(birthdata)
+        object_data = UserController.format_birthdata(birthdata)
         
-        return User_Methods.create(name=name, lastname=lastname, birthdata=object_data, email=email, password=password)
+        return UserManager.create_user(name=name, lastname=lastname, birthdata=object_data, email=email, password=password)
     
 
     def read_users(email):
-        return User_Methods.read(email=email)
+        return UserManager.read_user(email=email)
 
 
     def update_user(name, lastname, birthdata, email):
-        object_data = User_Controller.Format_Birthdata(birthdata)
+        object_data = UserController.format_birthdata(birthdata)
 
-        return  User_Methods.update(name=name, lastname=lastname, birthdata=object_data, email=email)
+        return  UserManager.update_user(name=name, lastname=lastname, birthdata=object_data, email=email)
 
     
     def delete_user(email):
-        return User_Methods.delete(email)
+        return UserManager.delete_user(email)
     
     
     def all_users():
-        return User_Methods.read_all_users()
+        return UserManager.read_all_users()
 

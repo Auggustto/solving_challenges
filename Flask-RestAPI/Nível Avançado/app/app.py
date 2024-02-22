@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 
-from controllers.user_controllers.user_controller import User_Controller
+from controllers.user_controllers.user_controller import UserController
 
 
 app = Flask(__name__)
@@ -23,21 +23,21 @@ class User(Resource):
 
     def post(self):
         _, _, _, email, _= self.get_metadata()
-        read_user = User_Controller.read_users(email=email)
+        read_user = UserController.read_users(email=email)
 
         return read_user
 
 
     def put(self):
         name, lastname, birthdata, email, _ = self.get_metadata()
-        update_user = User_Controller.update_user(name, lastname, birthdata, email)
+        update_user = UserController.update_user(name, lastname, birthdata, email)
 
         return update_user
     
 
     def delete(self):
         email = request.json.get("email")
-        delete_user = User_Controller.delete_user(email)
+        delete_user = UserController.delete_user(email)
 
         return delete_user
 
@@ -46,11 +46,11 @@ class User(Resource):
 class CreateUser(Resource):
 
     def get(self):
-        return User_Controller.all_users()
+        return UserController.all_users()
 
     def post(self):
         name, lastname, birthdata, email, password = User.get_metadata()
-        return User_Controller.create_users(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
+        return UserController.create_users(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
 
 
 
