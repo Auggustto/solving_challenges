@@ -18,7 +18,11 @@ class UserManager:
         Returns:
             User or None: User object found or None if not found.
         """
-        return session.query(User).filter_by(email=email).first()
+        try:
+            return session.query(User).filter_by(email=email).first()
+        except Exception as e:
+            logging.error(f"Error filtering user: {e}")
+            raise
 
 
     def create_user(name, lastname, birthdata, email, password):
@@ -68,7 +72,8 @@ class UserManager:
             return read_user.as_dict()
         
         except Exception as e:
-            return e, 500
+            logging.error(f"Error reading user: {e}")
+            return {"error": "An unexpected error occurred"}, 500
 
 
     def update_user(name, lastname, birthdata, email):
@@ -100,7 +105,8 @@ class UserManager:
             
         except Exception as e:
             session.rollback()
-            return {"error": str(e)}, 500
+            logging.error(f"Error updating user: {e}")
+            return {"error": "An unexpected error occurred"}, 500
 
 
     def delete_user(email):
@@ -126,7 +132,8 @@ class UserManager:
             
         except Exception as e:
             session.rollback()
-            return {"error": str(e)}, 500
+            logging.error(f"Error deleting user: {e}")
+            return {"error": "An unexpected error occurred"}, 500
         
 
     def read_all_users():
@@ -145,5 +152,5 @@ class UserManager:
             return {"error": "Users not found!"}, 404
         
         except Exception as e:
-            session.rollback()
-            return {"error": str(e)}, 500
+            logging.error(f"Error reading all users: {e}")
+            return {"error": "An unexpected error occurred"}, 500

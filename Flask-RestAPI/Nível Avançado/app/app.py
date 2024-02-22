@@ -23,7 +23,7 @@ class User(Resource):
 
     def post(self):
         _, _, _, email, _= self.get_metadata()
-        read_user = UserController.read_users(email=email)
+        read_user = UserController.read_user(email=email)
 
         return read_user
 
@@ -50,7 +50,7 @@ class CreateUser(Resource):
 
     def post(self):
         name, lastname, birthdata, email, password = User.get_metadata()
-        return UserController.create_users(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
+        return UserController.create_user(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
 
 
 
