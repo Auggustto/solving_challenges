@@ -8,6 +8,8 @@ from models.hash_models.hash_model import HashModels
 import logging
 
 class UserManager:
+    
+    @staticmethod
     def filter_user(email):
         """
         Filters a user by email.
