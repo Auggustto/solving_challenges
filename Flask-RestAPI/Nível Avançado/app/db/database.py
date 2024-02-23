@@ -36,8 +36,7 @@ class Posting(Base):
 
     id = Column(Integer, primary_key=True)
     category = Column(String(30), nullable=False)
-    post = Column(String)
-    comment = Column(String)
+    post = Column(String(1500), nullable=False)
     date = Column(Date)
     time = Column(Time)
     like = Column(Integer)
@@ -45,6 +44,7 @@ class Posting(Base):
 
     author_id = Column(Integer, ForeignKey("users.id"))
     author = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="posting")
 
     def as_dict(self):
         return { 
@@ -54,8 +54,18 @@ class Posting(Base):
             "comment": self.comment,
             "date": self.date,
             "like": self.like,
-            "deslike": self.deslike
+            "deslike": self.deslike,
+            "comment": [comment.as_dict() for comment in self.comments]
         }
+    
+
+class Comment(Base):
+    __tablename__ = "comment"
+
+    id = Column(Integer, primary_key=True)
+    text = Column(String(500), nullable=False)
+    posting_id = Column(Integer, ForeignKey("posting.id"))
+    posting = relationship("Posting", back_populates="comments")
 
 
 Base.metadata.create_all(engine)
