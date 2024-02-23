@@ -3,6 +3,8 @@ from flask_restful import Resource, Api
 
 from controllers.user_controller.user_controller import UserController
 from controllers.login_controller.login_controller import LoginController
+from controllers.posting_controller.posting_controller import PostingManager
+
 
 
 app = Flask(__name__)
@@ -61,10 +63,28 @@ class CreateUser(Resource):
         return UserController.create_user(name=name, lastname=lastname, birthdata=birthdata, email=email, password=password)
 
 
+class Posting(Resource):
+    
+    @staticmethod
+    def get_posting():
+        return (
+            request.json.get("email"),
+            request.json.get("category"),
+            request.json.get("post"),
+        )
+    
 
-api.add_resource(CreateUser, '/api/create_users')
-api.add_resource(User, '/api/users')
+    def post(self):
+        print(self.get_posting())
+        email, category, post = self.get_posting()
+
+        return PostingManager.create_post(email, category, post)
+
+
+api.add_resource(CreateUser, '/api/users')
+api.add_resource(User, '/api/user')
 api.add_resource(Login, '/api/login')
+api.add_resource(Posting, '/api/post')
 
 
 
